@@ -36,18 +36,23 @@ def Login():
 	SelectedUser = accounts[0][usrSelection]
 	return SelectedUser
 
-def Load():
+def Load(currentUser):
+	for root, dirs, files in os.walk("/Data"):
+		for file in files:
+			if file.endswith(".todo"):
+				print(os.path.join(root,file))
 
-def CreateNew():
 
-def addTask():
+# def CreateNew():
 
-def deleteTask():
+# def addTask():
 
-def updateTask():
+# def deleteTask():
+
+# def updateTask():
 
 if __name__ == '__main__':
 	print(currentUser)
 	Menu()
-	Load()
+	Load(currentUser)
 	print(currentUser) 
