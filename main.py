@@ -1,7 +1,8 @@
 import os 
 import sys
 import csv
-
+from pprint import pprint
+from PyInquirer import prompt, print_json
 
 currentUser = "global"
 
@@ -9,32 +10,51 @@ def Menu():
 
 	global currentUser
 
-	print("""
-		1. Login
-		2. Add new user
-		
-		Select an option """
-		)
-	Selection1 = int(input("~~~~> "))
-	if Selection1 == 1:
-		SelectedUser = Login()
-		print(SelectedUser + " Selected and loading ...")
-		currentUser = SelectedUser
-	elif Selection1 == 2:
-		print("not implemented yet")
+	questions = [ 
+		{
+        'type': 'list',
+        'name': 'mainMenu',
+        'message': 'Select an option',
+        'choices': ['Login','Add new User',] 
+		}
+	]
+
+	answers = prompt(questions)
+	if answers['mainMenu'] == 'Login':
+	 	SelectedUser = Login()
+	 	print(SelectedUser + " Selected and loading ...")
+	 	currentUser = SelectedUser
+	elif answers['mainMenu'] == 'Add new User':
+	 	print("not implemented yet")
 
 	return SelectedUser
 
 def Login():
+
+	
+	questions = [ 
+		{
+        'type': 'list',
+        'name': 'userSelect',
+        'message': 'Select a user',
+        'choices': getUserList()
+		}
+	]
+
+	answers = prompt(questions)
+	SelectedUser = answers['userSelect']
+	return SelectedUser
+
+def getUserList():
 	with open('Config/User_accounts.txt') as f:
 		accounts = list(csv.reader(f))
-	print('Select account')
-	for i in range(len(accounts[0])):
-		print("{0}. {1}".format(str(i+1),accounts[0][i]))
-	usrSelection = (int(input("~~~~> ")) - 1)
+	accounts = accounts[0]
 
-	SelectedUser = accounts[0][usrSelection]
-	return SelectedUser
+	return accounts
+
+
+
+
 
 def Load(currentUser):
 	for root, dirs, files in os.walk("Data/"):
@@ -46,7 +66,17 @@ def Load(currentUser):
 		with open(userFile) as f:
 			next(f)
 			todoMasterList = list(csv.reader(f))
-	print(todoMasterList)
+	questions = [
+    	{
+        	'type': 'checkbox',
+        	'qmark': '😃',
+        	'message': 'Select toppings',
+        	'name': 'toppings',
+			'choices': todoMasterList
+		}
+	]
+	answers = prompt(questions)
+
 
 # def CreateNew():
 
