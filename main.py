@@ -2,7 +2,7 @@ import os
 import sys
 import csv
 from pprint import pprint
-from PyInquirer import prompt, print_json
+from PyInquirer import prompt, print_json,Separator
 
 currentUser = "global"
 
@@ -66,13 +66,22 @@ def Load(currentUser):
 		with open(userFile) as f:
 			next(f)
 			todoMasterList = list(csv.reader(f))
+			print(todoMasterList[0])
 	questions = [
     	{
         	'type': 'checkbox',
         	'qmark': '😃',
         	'message': 'Select toppings',
         	'name': 'toppings',
-			'choices': todoMasterList
+        	'choices': [ 
+           		 Separator('= The Meats ='),
+            	{
+                	'name': 'Ham'
+           		 },
+            	{
+                	'name': 'Ground Meat'
+				},
+				]
 		}
 	]
 	answers = prompt(questions)
