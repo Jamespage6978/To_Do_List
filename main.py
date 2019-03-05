@@ -1,10 +1,17 @@
 import os 
 import sys
 import csv
+import argparse
 from pprint import pprint
 from PyInquirer import prompt, print_json,Separator
+from tabulate import tabulate
 import datetime
-import tzlocal
+import time
+
+
+parser = argparse.ArgumentParser(description = "Simple todo list creator and manager.")
+parser.add_argument('--User', type=str, help="User account quick access")
+args = parser.parse_args()
 
 currentUser = "global"
 
@@ -24,7 +31,6 @@ def Menu():
 	answers = prompt(questions)
 	if answers['mainMenu'] == 'Login':
 	 	SelectedUser = Login()
-	 	print(SelectedUser + " Selected and loading ...")
 	 	currentUser = SelectedUser
 	elif answers['mainMenu'] == 'Add new User':
 	 	print("not implemented yet")
@@ -64,39 +70,29 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
 		with open(userFile) as f:
 			next(f)
 			todoMasterList = list(csv.reader(f))
-	
+	for i in range(len(todoMasterList)):
+		todoMasterList[i].insert(4,dateConvert(float(int(time.time()))-float(todoMasterList[i][2]),days=True))
+		todoMasterList[i][2] = dateConvert(todoMasterList[i][2])
+		todoMasterList[i][3] = dateConvert(todoMasterList[i][3])
+
+
 	if dictSwitch == 0:
 		return	dict(enumerate(todoMasterList))
 	elif dictSwitch == 1:
 		return todoMasterList
 
-def dateConvert(unixTime):
-	 dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d-%m-%Y')
+def dateConvert(unixTime,days=False):
+	 if days:
+	 	dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d')
+	 else:
+		 dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d-%m-%Y')
+
 	 return dateT
 
-
 def Load(currentUser):
-	print("LOAD FUNCTION")
-	print(ReadTodoFile(currentUser,dictSwitch=1))
 	todoMasterList = ReadTodoFile(currentUser,dictSwitch=1)
+	print(tabulate(todoMasterList,headers=["Task Title","Task","Date Created","Deadline","Time Left (days)","Status"], showindex="always", tablefmt="github"))
 
-	for i in range(len(todoMasterList)):
-			dateCreated = dateConvert((float(todoMasterList[i][2])))
-			dateDeadline = dateConvert((float(todoMasterList[i][3])))
-			print("~ Task Title ~~ Task ~~ Date Created ~~ Deadline ")
-			print("| "+todoMasterList[i][0] + " | "+todoMasterList[i][1] + " | "+ dateCreated + " | "+ dateDeadline+ " |")
-
-	# questions = [
- #    	{
- #        	'type': 'checkbox',
- #        	'qmark': '😃',
- #        	'message': 'Select toppings',
- #        	'name': 'toppings',
- #        	'choices': ReadTodoFile(currentUser)
-	# 	}
-	# ]
-	# answers = prompt(questions)
-	# print(answers)
 
 
 # def CreateNew():
@@ -108,5 +104,14 @@ def Load(currentUser):
 # def updateTask():
 
 if __name__ == '__main__':
-	Menu()
+	if args.User is not None:
+		Users = getUserList()
+		if args.User in Users:
+			print("~~~~ Logging in as " + args.User + " ~~~~")
+			currentUser = args.User
+		else:
+			print("~~~~ User not in current User list taking you to the main menu ~~~~")
+			Menu()
+	else:
+		Menu()
 	Load(currentUser)
