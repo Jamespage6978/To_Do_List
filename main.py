@@ -3,6 +3,8 @@ import sys
 import csv
 from pprint import pprint
 from PyInquirer import prompt, print_json,Separator
+import datetime
+import tzlocal
 
 currentUser = "global"
 
@@ -52,39 +54,49 @@ def getUserList():
 
 	return accounts
 
-
-
-
-
-def Load(currentUser):
-	for root, dirs, files in os.walk("Data/"):
+def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
+	for root, dirs, files in os.walk(Directory):
 		for file in files:
-			if file.endswith("James.todo"):
+			if file.endswith(currentUser +".todo"):
 				userFile = os.path.join(root,file)
-				print(os.path.join(root,file))
+				print("~~~~ File Found in " + os.path.join(root,file)+ " ~~~~")
 	if len(userFile) != 0:
 		with open(userFile) as f:
 			next(f)
 			todoMasterList = list(csv.reader(f))
-			print(todoMasterList[0])
-	questions = [
-    	{
-        	'type': 'checkbox',
-        	'qmark': '😃',
-        	'message': 'Select toppings',
-        	'name': 'toppings',
-        	'choices': [ 
-           		 Separator('= The Meats ='),
-            	{
-                	'name': 'Ham'
-           		 },
-            	{
-                	'name': 'Ground Meat'
-				},
-				]
-		}
-	]
-	answers = prompt(questions)
+	
+	if dictSwitch == 0:
+		return	dict(enumerate(todoMasterList))
+	elif dictSwitch == 1:
+		return todoMasterList
+
+def dateConvert(unixTime):
+	 dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d-%m-%Y')
+	 return dateT
+
+
+def Load(currentUser):
+	print("LOAD FUNCTION")
+	print(ReadTodoFile(currentUser,dictSwitch=1))
+	todoMasterList = ReadTodoFile(currentUser,dictSwitch=1)
+
+	for i in range(len(todoMasterList)):
+			dateCreated = dateConvert((float(todoMasterList[i][2])))
+			dateDeadline = dateConvert((float(todoMasterList[i][3])))
+			print("~ Task Title ~~ Task ~~ Date Created ~~ Deadline ")
+			print("| "+todoMasterList[i][0] + " | "+todoMasterList[i][1] + " | "+ dateCreated + " | "+ dateDeadline+ " |")
+
+	# questions = [
+ #    	{
+ #        	'type': 'checkbox',
+ #        	'qmark': '😃',
+ #        	'message': 'Select toppings',
+ #        	'name': 'toppings',
+ #        	'choices': ReadTodoFile(currentUser)
+	# 	}
+	# ]
+	# answers = prompt(questions)
+	# print(answers)
 
 
 # def CreateNew():
