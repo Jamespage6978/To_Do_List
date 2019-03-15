@@ -1,10 +1,5 @@
-a = [ 
-            	{
-                	'name': 'Ham'
-           		 },
-            	{
-                	'name': 'Ground Meat'
-				}
-				]
+from datetime import date
 
-print(a[0]['name'])
+d0 = date(15,3,2019)
+
+print(d0)

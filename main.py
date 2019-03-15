@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import argparse
+import numpy
 from pprint import pprint
 from PyInquirer import prompt, print_json,Separator
 from tabulate import tabulate
@@ -70,10 +71,10 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
 		with open(userFile) as f:
 			next(f)
 			todoMasterList = list(csv.reader(f))
-	for i in range(len(todoMasterList)):
-		todoMasterList[i].insert(4,dateConvert(float(int(time.time()))-float(todoMasterList[i][2]),days=True))
-		todoMasterList[i][2] = dateConvert(todoMasterList[i][2])
-		todoMasterList[i][3] = dateConvert(todoMasterList[i][3])
+	# for i in range(len(todoMasterList)):
+	# 	todoMasterList[i].insert(4,dateConvert(float(todoMasterList[i][2])-float(int(time.time())),days=True))
+	# 	todoMasterList[i][2] = dateConvert(todoMasterList[i][2])
+	# 	todoMasterList[i][3] = dateConvert(todoMasterList[i][3])
 
 
 	if dictSwitch == 0:
@@ -84,6 +85,7 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
 def dateConvert(unixTime,days=False):
 	 if days:
 	 	dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d')
+	 	print(dateT)
 	 else:
 		 dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d-%m-%Y')
 
@@ -91,8 +93,10 @@ def dateConvert(unixTime,days=False):
 
 def Load(currentUser):
 	todoMasterList = ReadTodoFile(currentUser,dictSwitch=1)
-	print(tabulate(todoMasterList,headers=["Task Title","Task","Date Created","Deadline","Time Left (days)","Status"], showindex="always", tablefmt="github"))
+	print(tabulate(todoMasterList,headers=["Task Title","Task","Status"], showindex="always", tablefmt="github"))
 
+def SecondaryMenu():
+	questions
 
 
 # def CreateNew():
