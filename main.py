@@ -13,6 +13,7 @@ import time
 
 parser = argparse.ArgumentParser(description = "Simple todo list creator and manager.")
 parser.add_argument('--User', type=str, help="User account quick access")
+parser.add_argument('--Add',type=str,help="quick add tasks")
 args = parser.parse_args()
 
 currentUser = "global"
@@ -86,8 +87,11 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
 
     todelStore = []
     for i in range(len(todoMasterList)):
-        row_value = todoMasterList[i][0]
-        if row_value[0] == "#":
+        if todoMasterList[i]:
+            row_value = todoMasterList[i][0]
+            if row_value[0] == "#":
+                todelStore.append(i)
+        else:
             todelStore.append(i)
     for i in range(len(todelStore)):
         del todoMasterList[todelStore[i]]
@@ -211,13 +215,13 @@ def addTask():
     if answersConfirm['addCheck']:
         print("~~~~ adding task ~~~~")
         toAdd = []
-        toAdd.append(answers['TaskTitle'])
-        toAdd.append(answers['Task'])
-        toAdd.append(answers['status']) 
+        toAdd.append(answers['TaskTitle'].strip(' \n\t'))
+        toAdd.append(answers['Task'].strip(' \n\t'))
+        toAdd.append(answers['status'].strip(' \n\t')) 
         
         
 
-        with open(currentDir, "a") as fp:
+        with open(currentDir, "a",newline='') as fp:
             wr = csv.writer(fp, dialect='excel')
             wr.writerow(toAdd)
         print("~~~~ Task succesfully added ~~~~")
@@ -284,7 +288,16 @@ def stringVal(a):
         return False
 
 if __name__ == '__main__':
-    if args.User is not None:
+    
+    if args.User is not None and args.Add in ["1"]:
+        Users = getUserList()
+        if args.User in Users:
+            currentUser = args.User
+            ReadTodoFile(args.User,Directory="Data/",dictSwitch=0)
+            addTask()
+    
+    
+    elif args.User is not None:
         Users = getUserList()
         if args.User in Users:
             print("~~~~ Logging in as " + args.User + " ~~~~")
