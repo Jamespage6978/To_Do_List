@@ -73,7 +73,7 @@ def getUserList():
 
 def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
     global currentDir
-    for root, files in os.walk(Directory):
+    for root, dirs, files in os.walk(Directory):
         for file in files:
             if file.endswith(currentUser +".todo"):
                 userFile = os.path.join(root,file)
