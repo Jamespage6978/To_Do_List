@@ -221,8 +221,8 @@ def addTask():
         
         
 
-        with open(currentDir, "a",newline='') as fp:
-            wr = csv.writer(fp, dialect='excel')
+        with open(currentDir, "a", newline='') as fp:
+            wr = csv.writer(fp)
             wr.writerow(toAdd)
         print("~~~~ Task succesfully added ~~~~")
     else:
