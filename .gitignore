@@ -118,3 +118,6 @@ dmypy.json
 .pyre/
 .vscode/settings.json
 .vscode/settings.json
+
+*.todo
+Data/Todo_James.todo
