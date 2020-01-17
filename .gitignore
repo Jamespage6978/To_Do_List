@@ -121,7 +121,6 @@ dmypy.json
 
 *.todo
 Data/Todo_James.todo
-test.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
