@@ -97,10 +97,6 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
     for i in range(len(todelStore)):
         del todoMasterList[todelStore[i]]
 
-    # for i in range(len(todoMasterList)):
-    #   todoMasterList[i].insert(4,dateConvert(float(todoMasterList[i][2])-float(int(time.time())),days=True))
-    #   todoMasterList[i][2] = dateConvert(todoMasterList[i][2])
-    #   todoMasterList[i][3] = dateConvert(todoMasterList[i][3])
 
 
     if dictSwitch == 0:
@@ -111,7 +107,6 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
 def dateConvert(unixTime,days=False):
      if days:
         dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d')
-        print(dateT)
      else:
          dateT  = datetime.datetime.fromtimestamp(int(unixTime)).strftime('%d-%m-%Y')
 
