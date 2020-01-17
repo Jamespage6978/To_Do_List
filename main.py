@@ -86,6 +86,7 @@ def ReadTodoFile(currentUser,Directory = "Data/",dictSwitch = 0):
             todoMasterList = list(csv.reader(f))
 
     todelStore = []
+    todoMasterList = list(filter(None, todoMasterList))
     for i in range(len(todoMasterList)):
         if todoMasterList[i]:
             row_value = todoMasterList[i][0]
